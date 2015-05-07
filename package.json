@@ -1,0 +1,29 @@
+{
+  "name": "mapleify",
+  "version": "0.1.0",
+  "description": "Mapleify is a build tool for Maple.js; it uses Polymer's vulcanize to process HTML imports with a little twist of Maple specific logic for HTML Import paths, and the processing of SASS/JSX documents.",
+  "main": "bin/mapleify.js",
+  "bin": {
+    "mapleify": "mapleify.js"
+  },
+  "scripts": {
+    "test": "gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Wildhoney/Mapleify.git"
+  },
+  "keywords": [
+    "maple.js",
+    "mapleify",
+    "build",
+    "vulcanize",
+    "imports"
+  ],
+  "author": "Adam Timberlake <adam.timberlake@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Wildhoney/Mapleify/issues"
+  },
+  "homepage": "https://github.com/Wildhoney/Mapleify"
+}
