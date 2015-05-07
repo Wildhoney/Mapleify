@@ -5,10 +5,42 @@
     var vulcan = require('vulcanize'),
         path   = require('path'),
         fs     = require('fs'),
-        jsDom  = require('jsdom');
+        jsDom  = require('jsdom'),
+        argv   = require('minimist')(process.argv.slice(2));
 
-    var input  = path.resolve('example/index.html'),
-        output = path.resolve('example/mapleified.html');
+    if (!argv.i) {
+        throwError('Specify an input file, e.g: mapleify -i index.html').andTerminate();
+    }
+
+    var input  = path.resolve(argv.i),
+        output = path.resolve(argv.o || 'mapleified.html');
+
+    /**
+     * @method throwError
+     * @param {String} message
+     * @return {Object}
+     */
+    function throwError(message) {
+
+        var PrettyError = require('pretty-error'),
+            pe          = new PrettyError(),
+            rendered    = pe.render(new Error(message));
+
+        console.log(rendered);
+
+        return {
+
+            /**
+             * @method andTerminate
+             * @return {void}
+             */
+            andTerminate: function andTerminate() {
+                $process.exit(1);
+            }
+
+        }
+
+    }
 
     /**
      * @method loadDocuments
@@ -41,11 +73,10 @@
         return Array.prototype.slice.apply(arrayLike);
     }
 
-    vulcan.setOptions({ input: input, output: output }, function setOptions(thrownError) {
+    vulcan.setOptions({ input: input, output: output }, function setOptions(error) {
 
-        if (thrownError) {
-            console.error(thrownError);
-            $process.exit(1);
+        if (error) {
+            throwError(error).andTerminate();
         }
 
         vulcan.processDocument(output);
