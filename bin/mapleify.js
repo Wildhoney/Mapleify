@@ -102,7 +102,7 @@
 
             });
 
-            fs.writeFileSync(output, documentOutput.documentElement.innerHTML);
+            fs.writeFileSync(output, documentOutput.documentElement.outerHTML);
             $process.exit(0);
 
         });
