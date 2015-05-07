@@ -1,4 +1,4 @@
-(function main($process) {
+(function main($process, $console) {
 
     "use strict";
 
@@ -13,7 +13,7 @@
     }
 
     var input  = path.resolve(argv.i),
-        output = path.resolve(argv.o || 'mapleified.html');
+        output = path.resolve(argv.o || [path.dirname(input), 'mapleified.html'].join(path.sep));
 
     /**
      * @method throwError
@@ -26,7 +26,7 @@
             pe          = new PrettyError(),
             rendered    = pe.render(new Error(message));
 
-        console.log(rendered);
+        $console.log(rendered);
 
         return {
 
@@ -109,4 +109,4 @@
 
     });
 
-})(process);
+})(process, console);
