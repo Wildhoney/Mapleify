@@ -31,5 +31,9 @@
     "minimist": "^1.1.1",
     "pretty-error": "^1.1.2",
     "vulcanize": "^0.7.10"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.11",
+    "gulp-jshint": "^1.10.0"
   }
 }
