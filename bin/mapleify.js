@@ -2,6 +2,10 @@
 
     "use strict";
 
+    console.log(require('node-jsx').install());
+
+    return;
+
     var vulcan = require('vulcanize'),
         path   = require('path'),
         fs     = require('fs'),
