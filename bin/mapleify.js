@@ -1,10 +1,8 @@
+#!/usr/bin/env node
+
 (function main($process, $console) {
 
     "use strict";
-
-    console.log(require('node-jsx').install());
-
-    return;
 
     var vulcan = require('vulcanize'),
         path   = require('path'),

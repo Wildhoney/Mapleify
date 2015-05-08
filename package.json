@@ -1,10 +1,10 @@
 {
   "name": "mapleify",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Mapleify is a build tool for Maple.js; it uses Polymer's vulcanize to process HTML imports with a little twist of Maple specific logic for HTML Import paths, and the processing of SASS/JSX documents.",
   "main": "bin/mapleify.js",
   "bin": {
-    "mapleify": "bin/mapleify.js"
+    "mapleify": "./bin/mapleify.js"
   },
   "scripts": {
     "test": "gulp test"
