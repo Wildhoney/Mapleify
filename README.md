@@ -10,6 +10,8 @@
 
 ---
 
+![Screenshot](media/Screenshot%231.png)
+
 ## Getting Started
 
 `Mapleify` accepts the same arguments as [`vulcanize`](https://github.com/polymer/vulcanize):
