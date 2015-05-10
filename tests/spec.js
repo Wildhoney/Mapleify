@@ -37,7 +37,8 @@ describe('Mapleify', function() {
                 chai.expect(templates[1].getAttribute('ref')).to.equal('imports/jsx');
                 chai.expect(templates[1].querySelectorAll('style').length).to.equal(1);
                 chai.expect(templates[1].querySelectorAll('script').length).to.equal(1);
-                chai.expect(templates[1].querySelectorAll('script')[0].getAttribute('src')).to.equal('imports/jsx/default.jsx');
+                chai.expect(templates[1].querySelectorAll('script')[0].getAttribute('type')).to.equal('text/javascript');
+                chai.expect(templates[1].querySelectorAll('script')[0].getAttribute('src')).to.equal('imports/jsx/default.js');
 
                 done();
 

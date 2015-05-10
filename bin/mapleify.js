@@ -78,7 +78,31 @@
     }
 
     /**
-     * @module Mapleify
+     * @property transformations
+     * @type {Object}
+     */
+    var transformations = {
+
+        /**
+         * @method jsx
+         * @param {HTMLTemplateElement} templateElement
+         * @return {void}
+         */
+        jsx: function jsx(templateElement) {
+
+            var jsxFiles = toArray(templateElement.querySelectorAll('script[type="text/jsx"]'));
+
+            jsxFiles.forEach(function forEach(jsxFile) {
+                jsxFile.setAttribute('type', 'text/javascript');
+                jsxFile.setAttribute('src', jsxFile.getAttribute('src').replace(/x$/i, ''));
+            });
+
+        }
+
+    };
+
+    /**
+     * @property mapleify
      * @type {Object}
      */
     var mapleify = module.exports = {
@@ -117,6 +141,8 @@
                         templateElements.forEach(function forEach(templateElement, index) {
 
                             var element = correspondingElements[index];
+
+                            transformations.jsx(templateElement);
 
                             if (element.nodeName.toLowerCase() === 'template') {
                                 return;
