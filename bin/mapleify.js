@@ -135,7 +135,7 @@
                         var documentInput  = documents[0],
                             documentOutput = documents[1];
 
-                        var correspondingElements = toArray(documentInput.querySelectorAll('link[rel="import"],template')),
+                        var correspondingElements = toArray(documentInput.querySelectorAll('link[rel="import"]:not([data-ignore]),template')),
                             templateElements      = toArray(documentOutput.querySelectorAll('template'));
 
                         templateElements.forEach(function forEach(templateElement, index) {
