@@ -18,11 +18,9 @@ describe('Mapleify', function() {
         var outputFile = 'tests/compiled/mapleified.html',
             options    = { input: 'tests/compiled/index.html', output: outputFile };
 
-        mapleify.transform(options.input, options.output).then(function then() {
+        mapleify.transform(options.input, options.output).then(function then(data) {
 
-            var fileData = fs.readFileSync(outputFile, 'utf8');
-
-            jsDom.env(fileData, function(errors, window) {
+            jsDom.env(data.output, function(errors, window) {
 
                 var document  = window.document,
                     templates = document.querySelectorAll('template');
