@@ -10,12 +10,8 @@
         jsDom  = require('jsdom'),
         argv   = require('minimist')(process.argv.slice(2));
 
-    if (!argv.i) {
-        throwError('Specify an input file, e.g: mapleify -i index.html').andTerminate();
-    }
-
-    var input  = path.resolve(argv.i),
-        output = path.resolve(argv.o || [path.dirname(input), 'mapleified.html'].join(path.sep));
+    // Determine if the module was required, or used from the terminal.
+    var required = (require.main !== module);
 
     /**
      * @method throwError
@@ -23,6 +19,10 @@
      * @return {Object}
      */
     function throwError(message) {
+
+        if (required) {
+            throw new Error(message);
+        }
 
         var PrettyError = require('pretty-error'),
             pe          = new PrettyError(),
@@ -45,10 +45,21 @@
     }
 
     /**
+     * @method toArray
+     * @param {Object} arrayLike
+     * @return {Array}
+     */
+    function toArray(arrayLike) {
+        return Array.prototype.slice.apply(arrayLike);
+    }
+
+    /**
      * @method loadDocuments
+     * @param {Object} input
+     * @param {Object} output
      * @return {Promise[]}
      */
-    function loadDocuments() {
+    function loadDocuments(input, output) {
 
         return [input, output].map(function map(filePath) {
 
@@ -67,48 +78,75 @@
     }
 
     /**
-     * @method toArray
-     * @param {Object} arrayLike
-     * @return {Array}
+     * @module Mapleify
+     * @type {Object}
      */
-    function toArray(arrayLike) {
-        return Array.prototype.slice.apply(arrayLike);
-    }
+    var mapleify = module.exports = {
 
-    vulcan.setOptions({ input: input, output: output }, function setOptions(error) {
+        /**
+         * @method transform
+         * @param input {String}
+         * @param output {String}
+         * @param options {Object}
+         * @return {Promise}
+         */
+        transform: function transform(input, output, options) {
 
-        if (error) {
-            throwError(error).andTerminate();
-        }
+            if (!input) {
+                throwError('Specify an input file, e.g: mapleify -i index.html').andTerminate();
+            }
 
-        vulcan.processDocument(output);
+            return new Promise(function(resolve, reject) {
 
-        Promise.all(loadDocuments()).then(function then(documents) {
+                vulcan.setOptions({ input: input, output: output }, function setOptions(error) {
 
-            var documentInput  = documents[0],
-                documentOutput = documents[1];
+                    if (error) {
+                        throwError(error).andTerminate();
+                    }
 
-            var correspondingElements = toArray(documentInput.querySelectorAll('link[rel="import"],template')),
-                templateElements      = toArray(documentOutput.querySelectorAll('template'));
+                    vulcan.processDocument(output);
 
-            templateElements.forEach(function forEach(templateElement, index) {
+                    Promise.all(loadDocuments(input, output)).then(function then(documents) {
 
-                var element = correspondingElements[index];
+                        var documentInput  = documents[0],
+                            documentOutput = documents[1];
 
-                if (element.nodeName.toLowerCase() === 'template') {
-                    return;
-                }
+                        var correspondingElements = toArray(documentInput.querySelectorAll('link[rel="import"],template')),
+                            templateElements      = toArray(documentOutput.querySelectorAll('template'));
 
-                var componentPath = element.getAttribute('href').split('/').slice(0, -1).join('/');
-                templateElement.setAttribute('ref', componentPath);
+                        templateElements.forEach(function forEach(templateElement, index) {
+
+                            var element = correspondingElements[index];
+
+                            if (element.nodeName.toLowerCase() === 'template') {
+                                return;
+                            }
+
+                            var componentPath = element.getAttribute('href').split('/').slice(0, -1).join('/');
+                            templateElement.setAttribute('ref', componentPath);
+
+                        });
+
+                        fs.writeFileSync(output, documentOutput.documentElement.outerHTML);
+                        resolve({ output: documentOutput.documentElement.outerHTML });
+
+                    });
+
+                });
 
             });
 
-            fs.writeFileSync(output, documentOutput.documentElement.outerHTML);
-            $process.exit(0);
+        }
 
-        });
+    };
 
-    });
+    if (!required) {
+
+        var input  = path.resolve(argv.i),
+            output = path.resolve(argv.o || [path.dirname(input), 'mapleified.html'].join(path.sep));
+
+        mapleify.transform(input, output);
+
+    }
 
 })(process, console);

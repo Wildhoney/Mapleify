@@ -4,3 +4,9 @@
 
 # IDE
 /.idea
+
+# Tests
+/tests/compiled/*
+!/tests/compiled/index.html
+!/tests/compiled/imports/*
+!/tests/compiled/.gitkeep
