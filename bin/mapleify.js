@@ -45,6 +45,15 @@
     }
 
     /**
+     * @method nameSansExtension
+     * @param {String} path
+     * @return {String}
+     */
+    function nameSansExtension(path) {
+        return path.split('.').slice(0, -1).join('.');
+    }
+
+    /**
      * @method toArray
      * @param {Object} arrayLike
      * @return {Array}
@@ -84,17 +93,33 @@
     var transformations = {
 
         /**
-         * @method jsx
+         * @method js
          * @param {HTMLTemplateElement} templateElement
          * @return {void}
          */
-        jsx: function jsx(templateElement) {
+        js: function js(templateElement) {
 
-            var jsxFiles = toArray(templateElement.querySelectorAll('script[type="text/jsx"]'));
+            var jsFiles = toArray(templateElement.querySelectorAll('script'));
 
-            jsxFiles.forEach(function forEach(jsxFile) {
-                jsxFile.setAttribute('type', 'text/javascript');
-                jsxFile.setAttribute('src', jsxFile.getAttribute('src').replace(/x$/i, ''));
+            jsFiles.forEach(function forEach(jsFile) {
+                jsFile.setAttribute('type', 'text/javascript');
+                jsFile.setAttribute('src', nameSansExtension(jsFile.getAttribute('src')) + '.js');
+            });
+
+        },
+
+        /**
+         * @method css
+         * @param {HTMLTemplateElement} templateElement
+         * @return {void}
+         */
+        css: function css(templateElement) {
+
+            var jsFiles = toArray(templateElement.querySelectorAll('link'));
+
+            jsFiles.forEach(function forEach(jsFile) {
+                jsFile.setAttribute('type', 'text/css');
+                jsFile.setAttribute('href', nameSansExtension(jsFile.getAttribute('href')) + '.css');
             });
 
         }
@@ -142,7 +167,8 @@
 
                             var element = correspondingElements[index];
 
-                            transformations.jsx(templateElement);
+                            transformations.js(templateElement);
+                            transformations.css(templateElement);
 
                             if (element.nodeName.toLowerCase() === 'template') {
                                 return;
