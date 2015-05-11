@@ -8,6 +8,7 @@
         path   = require('path'),
         fs     = require('fs'),
         jsDom  = require('jsdom'),
+        assign = require('object-assign'),
         argv   = require('minimist')(process.argv.slice(2));
 
     // Determine if the module was required, or used from the terminal.
@@ -147,7 +148,9 @@
 
             return new Promise(function(resolve, reject) {
 
-                vulcan.setOptions({ input: input, output: output }, function setOptions(error) {
+                var options = assign(options || {}, { input: input, output: output });
+
+                vulcan.setOptions(options, function setOptions(error) {
 
                     if (error) {
                         throwError(error).andTerminate();
@@ -162,6 +165,14 @@
 
                         var correspondingElements = toArray(documentInput.querySelectorAll('link[rel="import"]:not([data-ignore]),template')),
                             templateElements      = toArray(documentOutput.querySelectorAll('template'));
+
+                        var correspondingLength = correspondingElements.length,
+                            templateLength      = templateElements.length;
+
+                        if (correspondingLength !== templateLength) {
+                            throwError('Mismatch between document templates: ' + correspondingLength + '/' + templateLength);
+                            reject();
+                        }
 
                         templateElements.forEach(function forEach(templateElement, index) {
 

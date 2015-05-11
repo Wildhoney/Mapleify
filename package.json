@@ -31,6 +31,7 @@
     "jsdom": "3.x.x",
     "minimist": "^1.1.1",
     "node-jsx": "^0.13.3",
+    "object-assign": "^2.0.0",
     "pretty-error": "^1.1.2",
     "vulcanize": "^0.7.10"
   },
