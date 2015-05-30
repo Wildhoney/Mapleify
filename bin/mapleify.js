@@ -186,6 +186,15 @@
                             }
 
                             var componentPath = element.getAttribute('href').split('/').slice(0, -1).join('/');
+
+                            if (element.hasAttribute('data-namespace')) {
+
+                                // Transfer across the namespace if it is defined.
+                                templateElement.setAttribute('data-namespace', element.getAttribute('data-namespace'));
+                                
+                            }
+
+
                             templateElement.setAttribute('ref', componentPath);
 
                         });
